@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#title').keyup(function() {
+                    var cs = $(this).val().length;
+                    $('#title_cnt span').text(cs);
+                    var preview = $(this).val();
+                    $('#preview-title').html(preview);
+                    if(cs == 0){
+                        $('#preview-title').html('Title Here');
+                    }
+                });
+                $('#title').blur(function() {
+                    var cs = $(this).val().length;
+                    $('#title_cnt span').text(cs);
+                    var preview = $(this).val();
+                    $('#preview-title').html(preview);
+                    if(cs == 0){
+                        $('#preview-title').html('Title Here');
+                    }
+                });
+                $('#desc').keyup(function() {
+                    var cs = $(this).val().length;
+                    $('#desc_cnt span').text(cs);
+                    if(cs > 124){
+                        var preview = $(this).val().substring(0,125);
+                        $('#desc-preview-content').html(preview+' ...');
+                    }else{
+                        var preview = $(this).val();
+                        $('#desc-preview-content').html(preview);
+                    }
+                    if(cs == 0){
+                        $('#desc-preview-content').html('Description here');
+                    }
+                });
+                 $('#desc').blur(function() {
+                    var cs = $(this).val().length;
+                    $('#desc_cnt span').text(cs);                    
+                    if(cs > 124){
+                        var preview = $(this).val().substring(0,125);
+                        $('#desc-preview-content').html(preview+' ...');
+                    }else{
+                        var preview = $(this).val();
+                        $('#desc-preview-content').html(preview);
+                    }
+                    if(cs == 0){
+                        $('#desc-preview-content').html('Description here');
+                    }
+                });
+                $('#tags').keyup(function() {
+                    getTagCharCount();
+                });
+                $('#tags').blur(function() {
+                    getTagCharCount();
+                });
+
+                $('#tags input').on('focusout',function(){    
+                    var txt= this.value.replace(/[^a-zA-Z0-9\+\-\.\#]/g,'');
+                    if(txt) {
+                        $(this).before('<span class="tag">'+ txt.toLowerCase() +'</span>');
+                    }
+                    this.value="";
+                    getTagCharCount();
+                }).on('keyup',function( e ){
+                    // if: comma,enter (delimit more keyCodes with | pipe)
+                    if(/(188|13|9)/.test(e.which)) $(this).focusout(); 
+                    getTagCharCount(); 
+                });
+
+                $('#tags').on('click','.tag',function(){
+                     $(this).remove();
+                    //if(confirm("Really delete this tag?")) $(this).remove();
+                    getTagCharCount(); 
+                });
+
+                function getTagCharCount(){
+                    var cs = $('#tags').children('span').contents().text().length;
+                    $('#tags_cnt span').text(cs);
+                }
+            });
+        </script>
+        <style>
+            .note{font-style: italic; font-size: 12px;}
+            #preview-image{float: left; width: 110px; margin-right: 10px;}
+            #preview-info{float: left; margin-left: 85px;}
+            #preview-title{color: #167ac6; cursor: pointer; font-weight: bold; font-size: 14px;}
+            #preview-author{font-size: 12px; color: #777;}
+            #preview-ago{font-size: 12px; color: #777; float: left;}
+            #preview-views{font-size: 12px; color: #777; float: left;}
+            #preview-views:after{clear: both;}
+            #desc-preview-content{ clear: both; max-width: 499px; line-height: 1.3em; word-wrap: break-word; text-overflow: ellipsis; white-space: normal; font-size: 13px; color: #777;}
+            .gray{color: #777;}
+            #tags{float:left; border:1px solid #ccc; font-family:Arial; width: 100%; border-radius: 4px;}
+            #tags span.tag{ cursor:pointer; display:block; line-height: 1.5em; float:left; color:#000; border: 1px solid #777; font-size: 12px; border-radius: 4px; padding:7px 5px; padding-right:25px; margin:4px;}
+            #tags span.tag:hover{opacity:0.7;}
+            #tags span.tag:after{ position:absolute; content:"x"; padding:0 3px 0 4px; margin:0 0 0 5px; color: #777; font-size:12px;}
+            #tags input{ display: inline; background:#eee; border: 0; margin:4px; line-height: 1em; padding:0px 7px; width:auto; font-size:12px;} 
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form action="" class="form-horizontal">
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-2"> 
+                                <h2>YouTube Title, Description & Tag Tool</h2> 
+                                <span class="note gray">This tool mimics YouTube's title, description, and tags fields and won't allow you to go over YouTube's limits, so you can craft the best SEO-friendly video meta possible.</span>
+                                <br /><br /> 
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Title:</label>
+                            <div class="col-sm-10">
+                                <input id="title" type="text" class="form-control" maxlength="100" />
+                                <div class="note" id="title_cnt"><span>0</span>/100 characters</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Desc:</label>
+                            <div class="col-sm-10">
+                                <textarea id="desc" type="text" rows="7" cols="50" class="form-control" maxlength="5000"></textarea>
+                                <div class="note" id="desc_cnt"><span>0</span>/5000 characters (about 125 for search result cutoff)</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Tags:</label>
+                            <div class="col-sm-10">
+                                <div id="tags" type="text">
+                                    <input type="text" value="" class="form-control" placeholder="Add tags" maxlength="500" />
+                                </div><br />
+                                <div class="note" id="tags_cnt"><span>0</span>/500 characters</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-2"> 
+                                <br />
+                                <div id="desc-preview">
+                                    <span class="note" style="font-size: 18px;">This is how your video will look in YouTube Search Results:</span>
+                                    <br /><br /><br />
+                                    <div id="preview-image"><img src="youtube-thumb.png" alt="youtool" width="196px" height="110px"></div>
+                                    <div id="preview-info">
+                                        <div id="preview-title">Title Here&nbsp;</div>
+                                        <div id="preview-author">by Your Name</div>
+                                        <div id="preview-ago">23 days ago&nbsp;&middot;&nbsp;</div>
+                                        <div id="preview-views">45,637 views</div>
+                                        <div id="desc-preview-content">
+                                            Description here
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-2"> 
+                    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                    This tool brought to you by our Sponsors:<br /><br />
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- YouTubeTitleTool1 -->
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:728px;height:90px"
+                         data-ad-client="ca-pub-2879169892643595"
+                         data-ad-slot="2814809461"></ins>
+                    <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div class="note" style="text-align: right; margin-right: 30px;">We are not affiliated with YouTube.&nbsp;|&nbsp;developed by <a href="http://overthink.io">overthink.io</a></div>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
